@@ -17,6 +17,9 @@
 
 (defn magic-strategy [thresh] (fn [a] (if (> a thresh) :> :<)))
 
+(defn random-magic-strategy [a] (let [t (random-long)]
+                                  (if (> a t) :> :<)))
+
 (defn simulate
   ([strategy] (simulate strategy 1000))
   ([strategy num] (let [single-round (fn [[a b]] (case (strategy a)
@@ -32,6 +35,7 @@
                             [(str "magic " thresh) (magic-strategy thresh)])
                           range)
         all-strats  (-> magic-strats
+                        (conj ["magic random" random-magic-strategy])
                         (conj ["random" random-strat])
                         (conj ["naive" naive-strategy]))]
     (str/join \newline
